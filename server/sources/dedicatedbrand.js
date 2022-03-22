@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
+const {'v5': uuidv5} = require('uuid');
 
 /**
  * Parse webpage e-shop
@@ -8,9 +9,12 @@ const cheerio = require('cheerio');
  */
 const parse = data => {
   const $ = cheerio.load(data);
-
   return $('.productList-container .productList')
     .map((i, element) => {
+      const link = `https://www.dedicatedbrand.com${$(element)
+      .find('.productList-link')
+      .attr('href')}`;
+      const brand = 'Dedicated';
       const name = $(element)
         .find('.productList-title')
         .text()
@@ -21,12 +25,41 @@ const parse = data => {
           .find('.productList-price')
           .text()
       );
-
-      return {name, price};
+      const _id = uuidv5(link, uuidv5.URL);
+      //item = JSON.parse(`{"_id":"${_id}","brand":"Dedicated","name":"${name}","price":${price}}`);
+      //return item;
+      return {brand,name, price};
     })
     .get();
 };
 
+const nb_prod_total = data => {
+  const $ = cheerio.load(data);
+
+  return $('.category')
+    .map((i, element) => {
+      const nb_prod_tot = parseInt(
+        $(element)
+          .find('.js-allItems-total')
+          .text());
+      return (nb_prod_tot);
+    })
+    .get();
+};
+
+const nb_prod_current = data => {
+  const $ = cheerio.load(data);
+
+  return $('.category')
+    .map((i, element) => {
+      const nb_prod_cur = parseInt(
+        $(element)
+          .find('.js-items-current')
+          .text());
+      return (nb_prod_cur);
+    })
+    .get();
+};
 /**
  * Scrape all the products for a given url page
  * @param  {[type]}  url
@@ -34,12 +67,29 @@ const parse = data => {
  */
 module.exports.scrape = async url => {
   try {
-    const response = await fetch(url);
-
+    let response = await fetch(url);
+    let products_dedicated = [];
     if (response.ok) {
-      const body = await response.text();
-
-      return parse(body);
+      let body = await response.text();
+      let total_prod = nb_prod_total(body);
+      //let meme = "";
+      //Math.round(total_prod/40) +1
+      /*
+      for(let i=0;i<1;i++)
+      {
+        //console.log(url +`#page=${i}` );
+        response = await fetch(url + `#page=${i}`);
+        body = await response.text();
+        let products = parse(body);
+        const items_json = JSON.stringify(products);
+        //products_dedicated.push(products);
+        //console.log(i);
+      }*/
+      response = await fetch(url);
+      body = await response.text();
+      let products = parse(body);
+      //const items_json = JSON.stringify(products);
+      return products;
     }
 
     console.error(response);

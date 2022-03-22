@@ -1,15 +1,16 @@
 require('dotenv').config();
 const {MongoClient} = require('mongodb');
 const fs = require('fs');
-//liste_products = require('../sandbox.js');
+var Dedicated_Products = require("./Dedicated_Products.json");
+var Montlimart_Products = require("./Montlimart_Products.json")
+var adresse_Products = require("./adresse_Products.json")
 
 const MONGODB_DB_NAME = 'fashion-sample';
-const MONGODB_COLLECTION = 'products';
+const MONGODB_COLLECTION = 'Liste_Products';
 const MONGODB_URI = process.env.MONGODB_URI;
 
 let client = null;
 let database = null;
-
 /**
  * Get db connection
  * @type {MongoClient}
@@ -33,27 +34,36 @@ const getDB = module.exports.getDB = async () => {
   }
 };
 
+
+module.exports.removeProducts = async (query) => {
+  try {
+    const db = await getDB();
+    await collection.deleteMany(query);
+    console.log("Products Removed !");
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+
 /**
  * Insert list of products
- * @param  {Array}  products
  * @return {Object}
  */
-module.exports.insert = async products => {
-  try {
+module.exports.insert = async () => {
     const db = await getDB();
     const collection = db.collection(MONGODB_COLLECTION);
     // More details
     // https://docs.mongodb.com/manual/reference/method/db.collection.insertMany/#insert-several-document-specifying-an-id-field
-    const result = await collection.insertMany(products, {'ordered': false});
+    let result = await collection.insertMany(Dedicated_Products);
+    console.log("Products Dedicated insert successfully!");
+    result = await collection.insertMany(Montlimart_Products);
+    console.log("Products Montlimart insert successfully!");
+    result = await collection.insertMany(adresse_Products);
+    console.log("Products Adresse Paris insert successfully!");
 
     return result;
-  } catch (error) {
-    console.error('🚨 collection.insertMany...', error);
-    fs.writeFileSync('products.json', JSON.stringify(products));
-    return {
-      'insertedCount': error.result.nInserted
-    };
-  }
 };
 
 /**
@@ -61,12 +71,13 @@ module.exports.insert = async products => {
  * @param  {Array}  query
  * @return {Array}
  */
-module.exports.find = async query => {
+module.exports.find = async (
+  query,
+  sort = {}, limit = 141) =>{
   try {
     const db = await getDB();
     const collection = db.collection(MONGODB_COLLECTION);
-    const result = await collection.find(query).toArray();
-
+    const result = await collection.find(query).sort(sort).limit(limit).toArray();
     return result;
   } catch (error) {
     console.error('🚨 collection.find...', error);

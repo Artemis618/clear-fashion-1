@@ -1,21 +1,79 @@
 /* eslint-disable no-console, no-process-exit */
+const fs = require('fs');
+const { contains } = require('cheerio/lib/static');
 const dedicatedbrand = require('./sources/dedicatedbrand');
+const montlimardbrand = require('./sources/Montlimart');
+const adresseparisbrand = require('./sources/AdresseParis');
+globalThis.liste_products = [];
 
-async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
+async function sandbox (eshop, eshop2, eshop3) {
   try {
-    console.log(`🕵️‍♀️  browsing ${eshop} source`);
+    if(eshop == 'https://www.dedicatedbrand.com/en/men/all-men#page=10'){
+      console.log(`🕵️‍♀️  browsing ${eshop} source`);
+      const dedicated_products = await dedicatedbrand.scrape(eshop);
+      //console.log(dedicated_products);
+      console.log('done');
+      this.liste_products = dedicated_products;
+      console.log('LISTE ',this.liste_products);
+      const Dedicated_json = JSON.stringify(dedicated_products);
+      fs.writeFileSync('./Dedicated_Products.json',Dedicated_json);
+    }
+    if(eshop2 == 'https://www.montlimart.com/toute-la-collection.html'){
+      console.log(`🕵️‍♀️  browsing ${eshop2} source`);
 
-    const products = await dedicatedbrand.scrape(eshop);
+      const montlimart_products = await montlimardbrand.scrape(eshop2);
+      console.log('done');
+      console.log(montlimart_products);
+      console.log('done');
+      //this.liste_products.push(montlimart_products);
+      //console.log('LISTE2 ',this.liste_products);
+      const Montlimart_json = JSON.stringify(montlimart_products);
+      fs.writeFileSync('./Montlimart_Products.json',Montlimart_json);
+    }
+    if(eshop3 == 'https://adresse.paris/630-toute-la-collection')
+    {
+      console.log(`🕵️‍♀️  browsing ${eshop3} source`);
 
-    console.log(products);
-    console.log('done');
-    process.exit(0);
+      const adresse_products = await adresseparisbrand.scrape(eshop3);
+      console.log('done');
+      console.log(adresse_products);
+      console.log('done');
+      const Adresse_json = JSON.stringify(adresse_products);
+      fs.writeFileSync('./adresse_Products.json',Adresse_json);
+
+      process.exit(0);
+    }
+    /*
+    else{
+      let adresseparis_products = [];
+      console.log(`🕵️‍♀️  browsing ${eshop} source`);
+
+      let products = await adresseparisbrand.scrape(eshop);
+      adresseparis_products = products; 
+      console.log(adresseparis_products);
+      console.log('done');
+      process.exit(0);      
+    }*/
   } catch (e) {
-    console.error(e);
+    console.error(e); 
     process.exit(1);
   }
 }
+//const [,, eshop] = process.argv;
 
-const [,, eshop] = process.argv;
+sandbox('https://www.dedicatedbrand.com/en/men/all-men#page=10','https://www.montlimart.com/toute-la-collection.html','https://adresse.paris/630-toute-la-collection');
+//sandbox('https://www.montlimart.com/toute-la-collection.html');
+//sandbox('https://adresse.paris/630-toute-la-collection');
 
-sandbox(eshop);
+module.exports =  this.liste_products;
+// PB AVEC LES ID A REVOIR
+
+// lien de mongodb atlas
+// https://cloud.mongodb.com/v2/6227773b8c9a17106aacd209#metrics/replicaSet/62277ea229a6fc16dddd6b66/explorer/fashion-sample/products/find
+
+// lien tuto mongoDB atlas
+// https://www.thepolyglotdeveloper.com/2018/09/developing-restful-api-nodejs-mongodb-atlas/
+
+// pour la prochaine fois : Modifier les ids pour qu'ils soient uniques
+// inserer les nouveaux produits dans mongodb atlas
+// faire les 2 dernieres des 3 fcts du point 5
