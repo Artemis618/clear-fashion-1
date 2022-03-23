@@ -2,17 +2,15 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>👕 Clear Fahion | Environmentally & human-friendly clothes</title>
+    <title>👕 Montlimart | Dedicated | Adresse Paris</title>
   </head>
   <body>
-    <h1>Clear fashion</h1>
+    <h1>Montlimart | Dedicated | Adresse Paris</h1>
     <section id="options">
       <div id="show">
         <label for="show-select">Show:</label>
         <select name="show" id="show-select">
-          <option value="12">12</option>
-          <option value="24">24</option>
-          <option value="48">48</option>
+          <option value="12">140 products in total</option>
         </select>
       </div>
       <div id="page">
@@ -20,67 +18,64 @@
         <select name="page" id="page-select"> </select>
       </div>
       <div id="filters">
-        <span>By reasonable price</span>
-
         <div id="brand">
           <label for="brand-select">By brands:</label>
           <select name="brand" id="brand-select">
             <option value=""></option>
-            <option value="coteleparis">coteleparis</option>
-            <option value="loom">loom</option>
-            <option value="adresse">adresse</option>
-            <option value="dedicated">dedicated</option>
-            <option value="1083">1083</option>  
+            <option value="Montlimart">Montlimart</option>
+            <option value="Adresse Paris">Adresse Paris</option>
+            <option value="Dedicated">Dedicated</option>
+          </select>
+        </div>
+      
+        <div id="sort">
+          <label for="sort-select">Sort:</label>
+          <select name="sort" id="sort-select">
+            <option value="no">No</option>
+            <option value="price-asc">Cheaper</option>
+            <option value="price-desc">Expensive</option>
           </select>
         </div>
 
-        <div id="released">
-          <label for="recently-released">Recently-released</label>
-          <select name="released" id="recently-released">
-            <option value="No">No thanks</option>
+        <div id="prix">
+          <label for="prix-select">Produits dont le prix est inférieur à :</label>
+          <select name="prix" id="prix-select">
+            <option value=""></option>
+            <option value=35>35</option>
+            <option value=50>50</option>
+            <option value=80>80</option>
+            <option value=100>100</option>
+            <option value=130>130</option>
+            <option value=500>500</option>
+          </select>
+        </div>
+
+        <div id="limite">
+          <label for="limite-select">Indiquez la limite de produits à afficher :</label>
+          <select name="limite" id="limite-select">
+            <option value="">Aucune</option>
+            <option value=5>5</option>
+            <option value=10>10</option>
+            <option value=20>20</option>
+            <option value=30>30</option>
+          </select>
+        </div>
+
+        <div id="fav">
+          <label for="favori">Favori:</label>
+          <select name="fav" id="favori">
+            <option value="No">No Thanks</option>
             <option value="Yes">Yes</option>
           </select>
-        </div>
-
-        <div id="price-50">
-          <label for="price-less50">Prix inférieur à 50€</label>
-          <select name="price-50" id="price-less50">
-            <option value="No">No thanks</option>
-            <option value="Yes">Yes</option>
-          </select>
-        </div>
-
-      </div>
-      <div id="sort">
-        <label for="sort-select">Sort:</label>
-        <select name="sort" id="sort-select">
-          <option value="no">No</option>
-          <option value="price-asc">Cheaper</option>
-          <option value="price-desc">Expensive</option>
-          <option value="date-asc">Recently released</option>
-          <option value="date-desc">Anciently released</option>
-        </select>
-      </div>
-
-      </div>
-      <div id="fav">
-        <label for="favori">Favori:</label>
-        <select name="fav" id="favori">
-          <option value="No">No Thanks</option>
-          <option value="Yes">Yes</option>
-        </select>
+        </div>   
       </div>   
-
     </section>
+    
     <section id="indicators">
       <h2>Indicators</h2>
       <div>
         <span>Number of products</span>
         <span id="nbProducts">0</span>
-      </div>
-      <div>
-        <span>Number of new products</span>
-        <span>0</span>
       </div>
       <div>
         <span>p50 price value</span>
@@ -94,16 +89,8 @@
         <span>p95 price value</span>
         <span id="p95">spanp95</span>
       </div>
-      <div>
-        <span>Last released date</span>
-        <span id = "last">spanlast</span>
-      </div>
-              
-      <div>
-        <span>Count Recently released</span>
-        <span id="count-recently-released">spancountRecentlyReleased</span>
-      </div>
     </section>
+    
     <section id="products"></section>
     <script type="text/javascript" charset="UTF-8" src="portfolio.js"></script>
   </body>
